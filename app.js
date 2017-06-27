@@ -17,6 +17,7 @@ app.use(session({
   saveUninitialized: true
 }));
 
+app.use(express.static(__dirname));
 app.engine('mustache', mustache());
 app.set('view engine', 'mustache');
 app.set('views', './views');
@@ -49,11 +50,10 @@ app.post('/theGame/', function(req, res){
       res.redirect('/theGame/');
     }
   }
-
+console.log("this is inCorrectGuessCounter: " + data.inCorrectGuessCounter);
+console.log(req.session.counter);
 });
-console.log("this is the correct word: " + data.correctWord);
-console.log("this is guessesArray: " + data.guessesArray);
-console.log(data.correctGuessesArray);
+
 app.listen(3000, function () {
   console.log('Successfully started express application!');
 });
