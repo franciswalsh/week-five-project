@@ -9,13 +9,24 @@
       <h1>Mystery Word Game</h1>
     </div>
     <div id="guessChecker">
+      {{#correctGuessesArray}}
+        <p><u>{{guess}}</u></p>
+      {{/correctGuessesArray}}
     </div>
     <div id="userEntry">
       <form action="/theGame/" method="post">
-        <label for="userInput">Please geuss a letter</label>
+        <label for="userInput">Please guess a letter</label>
         <input type="text" id="userInput" name="userGuess">
         <input type="submit" id="loginButton" value="guess">
       </form>
+    </div>
+    <div id="allGuessesContainer">
+      <h3>You have guessed the followed letters:</h3>
+      <div id="allGuesses">
+        {{#guessesArray}}
+          <p>{{.}}</p>
+        {{/guessesArray}}
+      </div>
     </div>
   </body>
 </html>

@@ -24,24 +24,36 @@ app.set('views', './views');
 app.get('/', function(req, res){
   if(req.session){
     res.redirect('/theGame/');
-    console.log(req.session);
   } else {
     res.send("we are communicating");
   }
 
 });
 app.get('/theGame/', function(req, res){
-  res.render('theGame');
+  res.render('theGame', {correctGuessesArray: data.correctGuessesArray, guessesArray: data.guessesArray});
 });
 app.post('/theGame/', function(req, res){
   let userGuess = req.body.userGuess;
-  data.guessesArray.push(userGuess);
-  res.send(data.guessesArray);
+
+  req.checkBody("userGuess", "You must enter a guess").notEmpty();
+  var errors = req.validationErrors();
+
+  if(errors){
+    res.send(errors[0].msg);
+  } else {
+    if (userGuess.length > 1){
+      res.send("your entry must be one letter");
+    } else {
+      data.guessesArray.push(userGuess);
+      data.isUserGuessCorrect(req, userGuess);
+      res.redirect('/theGame/');
+    }
+  }
+
 });
-
-console.log(data.correctWord);
-console.log(data.correctWordArray);
-
+console.log("this is the correct word: " + data.correctWord);
+console.log("this is guessesArray: " + data.guessesArray);
+console.log(data.correctGuessesArray);
 app.listen(3000, function () {
   console.log('Successfully started express application!');
 });

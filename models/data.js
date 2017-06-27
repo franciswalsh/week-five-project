@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 let guessesArray = [];
+let correctGuessesArray = [];
 let correctWordArray = [];
 let correctWord;
 const possibleWordsArray = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
@@ -18,13 +19,30 @@ function convertWordToArrayOfCharacters(word){
   }
   return newArray;
 }
+function makeArrayOfEmptyCharactersSameLengthAsWord(word){
+  let newArray = [];
+  for (let i = 0; i < word.length; i++){
+    newArray.push({guess: '*'});
+  }
+  return newArray;
+}
+function isUserGuessCorrect(req, guess){
+  for (let i = 0; i < correctWordArray.length; i++){
+    if (guess === correctWordArray[i]){
+      correctGuessesArray[i].guess = guess;
+    }
+  }
+}
 
 correctWord = getRandomWord();
+correctGuessesArray = makeArrayOfEmptyCharactersSameLengthAsWord(correctWord);
 correctWordArray = convertWordToArrayOfCharacters(correctWord);
 
 module.exports = {
   possibleWordsArray: possibleWordsArray,
   guessesArray: guessesArray,
   correctWordArray: correctWordArray,
-  correctWord: correctWord
+  correctWord: correctWord,
+  correctGuessesArray: correctGuessesArray,
+  isUserGuessCorrect: isUserGuessCorrect
 }
