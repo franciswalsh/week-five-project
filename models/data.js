@@ -1,12 +1,12 @@
+
+// const possibleWordsArray = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
+// let guessesArray = [];
+// let correctGuessesArray = [];
+// let correctWordArray = [];
+// let correctWord;
+// let numberOfGuessesLeft = 8;
+
 const fs = require('fs');
-
-const possibleWordsArray = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
-let guessesArray = [];
-let correctGuessesArray = [];
-let correctWordArray = [];
-let correctWord;
-let numberOfGuessesLeft = 8;
-
 
 function getRandomWord(){
   const possibleWordsArray = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
@@ -31,8 +31,8 @@ function makeArrayOfEmptyCharactersSameLengthAsWord(word){
 function isUserGuessCorrect(req, guess){
   let wasGuessCorrect = false;
   // for (let i = 0; i < correctWordArray.length; i++)
-  for (guessed in correctWordArray){
-    if (guess === correctWordArray[guessed]){
+  for (guessed in req.session.correctWordArray){
+    if (guess === req.session.correctWordArray[guessed]){
       // correctGuessesArray[guessed].guess = guess;
       req.session.correctGuessesArray[guessed].guess = guess;
       wasGuessCorrect = true;
@@ -69,29 +69,65 @@ function testingForDuplicateInput(req, userGuess){
   return duplicate;
 }
 
+function testingForLetter(req, userGuess){
+  const alphabet = [ 'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v',
+    'w',
+    'x',
+    'y',
+    'z' ];
+  let tester = true;
+  for (let i in alphabet){
+    if (userGuess === alphabet[i]){
+      tester = false;
+    }
+  }
+  return tester;
+}
 
 
-correctWord = getRandomWord();
-let correctWordWrapper = [correctWord];
-correctGuessesArray = makeArrayOfEmptyCharactersSameLengthAsWord(correctWord);
-correctWordArray = convertWordToArrayOfCharacters(correctWord);
+// correctWord = getRandomWord();
+// let correctWordWrapper = [correctWord];
+// correctGuessesArray = makeArrayOfEmptyCharactersSameLengthAsWord(correctWord);
+// correctWordArray = convertWordToArrayOfCharacters(correctWord);
 
 // let bullshitArray = [req.session.numberOfGuessesLeft]
 
 module.exports = {
-  possibleWordsArray: possibleWordsArray,
-  guessesArray: guessesArray,
-  correctWordArray: correctWordArray,
-  correctWord: correctWord,
-  correctGuessesArray: correctGuessesArray,
   isUserGuessCorrect: isUserGuessCorrect,
-  numberOfGuessesLeft: numberOfGuessesLeft,
   didUserWin: didUserWin,
   getRandomWord: getRandomWord,
   makeArrayOfEmptyCharactersSameLengthAsWord: makeArrayOfEmptyCharactersSameLengthAsWord,
   convertWordToArrayOfCharacters: convertWordToArrayOfCharacters,
   testingForDuplicateInput: testingForDuplicateInput,
-  correctWordWrapper: correctWordWrapper
+  testingForLetter: testingForLetter
+  // possibleWordsArray: possibleWordsArray,
+  // guessesArray: guessesArray,
+  // correctWordArray: correctWordArray,
+  // correctWord: correctWord,
+  // correctGuessesArray: correctGuessesArray,
+  // numberOfGuessesLeft: numberOfGuessesLeft,
+  // correctWordWrapper: correctWordWrapper
   // bullshitArray: bullshitArray
 }
 

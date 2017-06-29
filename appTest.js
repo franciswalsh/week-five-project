@@ -33,10 +33,14 @@ app.get('/', function(req, res) {
   if (req.session) {
     console.log("original", req.session);
     req.session.numberOfGuessesLeft = 8;
-    req.session.correctWord = data.correctWord;
-    req.session.correctGuessesArray = data.correctGuessesArray;
-    req.session.guessesArray = data.guessesArray;
-    req.session.correctWordArray = data.correctWordArray;
+    req.session.correctWord = data.getRandomWord();
+    req.session.correctGuessesArray = data.makeArrayOfEmptyCharactersSameLengthAsWord(req.session.correctWord);
+    req.session.correctWordArray = data.convertWordToArrayOfCharacters(req.session.correctWord);
+    req.session.guessesArray = [];
+    // req.session.correctWord = data.correctWord;
+    // req.session.correctGuessesArray = data.correctGuessesArray;
+    // req.session.guessesArray = data.guessesArray;
+    // req.session.correctWordArray = data.correctWordArray;
     console.log(data.correctWord);
     console.log("modified req.session: ", req.session);
     res.redirect('/theGame/');
@@ -62,23 +66,20 @@ app.post('/theGame/', function(req, res) {
   var errors = req.validationErrors();
 
   if (errors) {
-    // res.send(errors[0].msg);
     res.redirect('/blankEntry/');
   } else {
     if (userGuess.length > 1) {
-      // res.send("your entry must be one letter");
       res.redirect('/tooManyCharacters/');
     } else if (data.testingForDuplicateInput(req, userGuess)) {
       res.redirect('/duplicateEntry');
+    } else if (data.testingForLetter(req, userGuess)){
+      res.redirect('/blankEntry/');
     } else {
-      // data.guessesArray.push(userGuess);
       req.session.guessesArray.push(userGuess);
       data.isUserGuessCorrect(req, userGuess);
-      // let correctGuesses = req.session.numberOfCorrectGuesses;
       let correctArray = data.correctGuessesArray;
+      console.log("this is testing for letter: " + data.testingForLetter(req, userGuess));
       req.session.winner = data.didUserWin(req.session.correctGuessesArray);
-      // let guessesLeft = req.session.numberOfGuessesLeft;
-      // bullshitArray = [req.session.numberOfGuessesLeft]
       if (req.session.numberOfGuessesLeft <= 0) {
         res.redirect('/youLose/');
       } else if (req.session.winner === true) {
@@ -132,6 +133,12 @@ app.get('/duplicateEntry/', function(req, res) {
   res.render('duplicateEntry');
 });
 app.post('/duplicateEntry/', function(req, res) {
+  res.redirect('/theGame/');
+});
+app.get('/blankEntry/', function(req, res) {
+  res.render('blankEntry');
+});
+app.post('/blankEntry/', function(req, res) {
   res.redirect('/theGame/');
 });
 app.get('/blankEntry/', function(req, res) {
