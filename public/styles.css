@@ -1,0 +1,20 @@
+body {
+  background-color: white;
+}
+#guessChecker {
+  display: flex;
+}
+#guessChecker p {
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+  border-bottom-color: black;
+  border-bottom-style: solid;
+  border-bottom-width: medium;
+}
+#allGuesses {
+  display: flex;
+}
+#allGuesses p {
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+}

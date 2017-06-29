@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>you win! The correct word was {{#correctWordWrapper}}{{.}}{{/correctWordWrapper}}</h1>
+    <h2>Do you want to play again?</h2>
+    <form action="/soreLoser/" method="post">
+      <input type="submit" id="noDontPlayAgain" value="no">
+    </form>
+    <form action="/playAgain/" method="post">
+      <input type="submit" id="yesPlayAgain" value="yes">
+    </form>
+  </body>
+</html>
