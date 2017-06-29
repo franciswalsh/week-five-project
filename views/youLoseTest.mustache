@@ -16,12 +16,21 @@
         {{/correctGuessesArray}}
       </div>
     </div>
-    <div id="userEntry">
-      <form action="/theGame/" method="post">
-        <label for="userInput">Please guess a letter</label>
-        <input type="text" id="userInput" name="userGuess">
-        <input type="submit" id="entryButton" value="guess">
-      </form>
+    <div id="loserResponse">
+      <h3>Sorry, you lose!</h3>
+    </div>
+    <div id="doYouWantToPlayAgainWrapper">
+      <div id="doYouWantToPlayAgain">
+        <h2>Do you want to play again?</h2>
+        <div id="playAgainAnswers">
+          <form action="/playAgain/" method="post">
+            <input type="submit" id="yesPlayAgain" value="yes">
+          </form>
+          <form action="/soreLoser/" method="post">
+            <input type="submit" id="noDontPlayAgain" value="no">
+          </form>
+        </div>
+      </div>
     </div>
     <div id="allGuessesContainer">
       <h3>You have guessed the following letters:</h3>

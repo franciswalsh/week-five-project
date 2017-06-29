@@ -6,12 +6,14 @@
   </head>
   <body>
     <h1>you win! The correct word was {{#correctWordWrapper}}{{.}}{{/correctWordWrapper}}</h1>
-    <h2>Do you want to play again?</h2>
-    <form action="/soreLoser/" method="post">
-      <input type="submit" id="noDontPlayAgain" value="no">
-    </form>
-    <form action="/playAgain/" method="post">
-      <input type="submit" id="yesPlayAgain" value="yes">
-    </form>
+    <div id="doYouWantToPlayAgain">
+      <h2>Do you want to play again?</h2>
+      <form action="/soreLoser/" method="post">
+        <input type="submit" id="noDontPlayAgain" value="no">
+      </form>
+      <form action="/playAgain/" method="post">
+        <input type="submit" id="yesPlayAgain" value="yes">
+      </form>
+    </div>
   </body>
 </html>
