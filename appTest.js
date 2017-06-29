@@ -28,9 +28,17 @@ app.set('views', './views');
 
 app.get('/', function(req, res) {
 
-  req.session.numberOfGuessesLeft = 8;
+  console.log(data.correctWord);
 
   if (req.session) {
+    console.log("original", req.session);
+    req.session.numberOfGuessesLeft = 8;
+    req.session.correctWord = data.correctWord;
+    req.session.correctGuessesArray = data.correctGuessesArray;
+    req.session.guessesArray = data.guessesArray;
+    req.session.correctWordArray = data.correctWordArray;
+    console.log(data.correctWord);
+    console.log("modified req.session: ", req.session);
     res.redirect('/theGame/');
   } else {
     res.send("we are communicating");
@@ -40,16 +48,15 @@ app.get('/', function(req, res) {
 app.get('/theGame/', function(req, res) {
 
   let bullshitArray = [req.session.numberOfGuessesLeft];
-  console.log(req.session.numberOfGuessesLeft);
-  console.log(req.session);
+
   res.render('theGame', {
-    correctGuessesArray: data.correctGuessesArray,
-    guessesArray: data.guessesArray,
+    correctGuessesArray: req.session.correctGuessesArray,
+    guessesArray: req.session.guessesArray,
     bullshitArray: bullshitArray
   });
 });
 app.post('/theGame/', function(req, res) {
-  console.log(data.correctWord);
+
   let userGuess = req.body.userGuess.toLowerCase();
   req.checkBody("userGuess", "You must enter a guess").notEmpty();
   var errors = req.validationErrors();
@@ -61,21 +68,23 @@ app.post('/theGame/', function(req, res) {
     if (userGuess.length > 1) {
       // res.send("your entry must be one letter");
       res.redirect('/tooManyCharacters/');
-    } else if (data.testingForDuplicateInput(userGuess)) {
+    } else if (data.testingForDuplicateInput(req, userGuess)) {
       res.redirect('/duplicateEntry');
     } else {
-      data.guessesArray.push(userGuess);
+      // data.guessesArray.push(userGuess);
+      req.session.guessesArray.push(userGuess);
       data.isUserGuessCorrect(req, userGuess);
-      let correctGuesses = req.session.numberOfCorrectGuesses;
+      // let correctGuesses = req.session.numberOfCorrectGuesses;
       let correctArray = data.correctGuessesArray;
-      let winner = data.didUserWin(correctArray);
-      let guessesLeft = req.session.numberOfGuessesLeft;
-      bullshitArray = [req.session.numberOfGuessesLeft]
-      if (guessesLeft <= 0) {
+      req.session.winner = data.didUserWin(req.session.correctGuessesArray);
+      // let guessesLeft = req.session.numberOfGuessesLeft;
+      // bullshitArray = [req.session.numberOfGuessesLeft]
+      if (req.session.numberOfGuessesLeft <= 0) {
         res.redirect('/youLose/');
-      } else if (winner) {
+      } else if (req.session.winner === true) {
         res.redirect('/youWin/');
       } else {
+        console.log(req.session);
         res.redirect('/theGame/');
       }
       // res.redirect('/theGame/');
@@ -83,21 +92,19 @@ app.post('/theGame/', function(req, res) {
   }
 });
 app.get('/youLose/', function(req, res) {
-  req.session.destroy();
   res.render('youLoseTest', {
     correctWordWrapper: data.correctWordWrapper,
-    correctGuessesArray: data.correctGuessesArray,
-    guessesArray: data.guessesArray,
-    bullshitArray: bullshitArray
+    correctGuessesArray: req.session.correctGuessesArray,
+    guessesArray: req.session.guessesArray,
+    // bullshitArray: bullshitArray
   });
 });
 app.get('/youWin/', function(req, res) {
-  req.session.destroy();
   res.render('youWinTest', {
     correctWordWrapper: data.correctWordWrapper,
-    correctGuessesArray: data.correctGuessesArray,
-    guessesArray: data.guessesArray,
-    bullshitArray: bullshitArray
+    correctGuessesArray: req.session.correctGuessesArray,
+    guessesArray: req.session.guessesArray,
+    // bullshitArray: bullshitArray
   });
 });
 app.get('/soreLoser/', function(req, res) {
@@ -110,7 +117,9 @@ app.get('/playAgain/', function(req, res) {
   res.send('something went wrong');
 });
 app.post('/playAgain/', function(req, res) {
-  console.log(req.session.numberOfGuessesLeft);
+  console.log("during old game", req.session);
+  req.session.destroy();
+  console.log("starting new game", req.session);
   res.redirect('/');
 });
 app.get('/tooManyCharacters/', function(req, res) {
